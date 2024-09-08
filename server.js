@@ -12,12 +12,16 @@ app.use(express.json());
 
 const publicDiaryRoutes = require("./routes/publicDiary");
 const diaryRoutes = require("./routes/diary");
+const authRoutes = require("./routes/auth");
 
 // Public diary routes (no authentication)
 app.use("/api/public-diary", publicDiaryRoutes);
 
-// Mixed public and protected diary routes
+// Protected diary routes
 app.use("/api/diary", diaryRoutes);
+
+// Auth routes
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello from the backend!");

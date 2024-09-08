@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 router.get("/public", async (req, res) => {
   try {
     const entries = await prisma.diaryEntry.findMany({
+      where: { isPublic: true }, // Assuming you have an isPublic field
       orderBy: { createdAt: "desc" },
     });
     res.json(entries);
