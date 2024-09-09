@@ -18,4 +18,26 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/categories", async (req, res) => {
+  try {
+    const categories = await prisma.diaryEntry.findMany({
+      select: {
+        category: true,
+      },
+      distinct: ["category"],
+      where: {
+        category: {
+          not: null,
+          not: "",
+        },
+      },
+    });
+    const uniqueCategories = categories.map((c) => c.category).filter(Boolean);
+    res.json(uniqueCategories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ error: "Error fetching categories" });
+  }
+});
+
 module.exports = router;
