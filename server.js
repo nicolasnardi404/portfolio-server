@@ -1,11 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const { PrismaClient } = require("@prisma/client");
-require("dotenv").config();
+const prisma = require("./prisma");
 
 const app = express();
-const prisma = new PrismaClient();
-const port = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +24,21 @@ app.get("/", (req, res) => {
   res.send("Hello from the backend!");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
+const port = process.env.PORT || 3000;
+
+const server = app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+process.on("SIGTERM", () => {
+  console.log("SIGTERM signal received: closing HTTP server");
+  server.close(() => {
+    console.log("HTTP server closed");
+    prisma.$disconnect();
+  });
 });

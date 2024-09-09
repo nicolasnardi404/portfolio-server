@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const authMiddleware = require("./authMiddleware");
-
-const prisma = new PrismaClient();
+const prisma = require("../prisma");
 
 // Public route to get all diary entries (no authentication required)
 router.get("/public", async (req, res) => {
